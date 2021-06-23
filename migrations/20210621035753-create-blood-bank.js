@@ -1,32 +1,28 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Hospitals', {
+    await queryInterface.createTable('BloodBanks', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      hospitalName: {
+      bloodBankName: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
       },
-      phone: {
-        type: Sequelize.STRING,
+      bloodBankPhone: {
+        type: Sequelize.STRING
       },
-      hospitalAddress: {
-        type: Sequelize.STRING,
-      },
-      hospitalImage: {
+      bloodBankPhoto: {
         type: Sequelize.STRING,
       },
       latitude: {
         type: Sequelize.INTEGER,
       },
       longitude: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -39,6 +35,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Hospitals');
+    await queryInterface.dropTable('BloodBanks');
   }
 };

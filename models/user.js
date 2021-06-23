@@ -56,9 +56,16 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     role: {
-      type: DataTypes.STRING,
-      enum: ['superAdmin','admin', 'user'],
+      // type: DataTypes.STRING,
+      // enum: ['superAdmin','admin', 'user'],
+      type: DataTypes.ENUM('superAdmin', 'admin', 'user'),
       defaultValue: 'user',
+      validate: {
+        isIn: {
+          args: [['superAdmin', 'admin', 'user']],
+          msg: 'Invalid Role!!'
+        }
+      }
     },
   }, {
     sequelize,

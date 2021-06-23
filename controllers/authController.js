@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const catchAsync = require('express-async-handler');
+const { promisify } = require('util')
 
 const User = require('../models').User;
 
@@ -66,7 +67,7 @@ exports.logIn = catchAsync(async(req, res)=> {
         res.status(404).json({
             status: 'failed',
             message: 'Please provide a valid email address!!',
-        })
+        }) 
     }
     const isValidPassword = bcrypt.compareSync(req.body.password, user.password);
     if (!isValidPassword) {
@@ -77,7 +78,7 @@ exports.logIn = catchAsync(async(req, res)=> {
       }
     
     //Send tokem to the USER
-    createSendToken(user, 201, res)
+    createSendToken(user, 200, res)
 })
 
 exports.logOut = catchAsync(async (req, res) => {
@@ -88,3 +89,65 @@ exports.logOut = catchAsync(async (req, res) => {
     });
     res.status(200).json({ status: 'success' });
   });
+
+
+// Check if the USER is logged in or not
+exports.protect = catchAsync( async (req, res, next) => {
+    
+    // Get token and check if it is there
+    let token;
+    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
+        token = req.headers.authorization.split(' ')[1];
+    } else if(req.cookies.jwt){
+        token = req.cookies.jwt;
+    }
+    console.log(token);
+    if(token === undefined || token === 'loggedout'){
+        return next(
+            res.status(400).json({
+                status: 'failed',
+                message: 'You are not logged in !! Please log in and continue!!',
+            })
+        );
+    }
+
+    // Verify the token 
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    // const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+    
+    //Cheeck if the user still exists
+    const currentUser = await User.findByPk(decoded.id);
+
+    if(!currentUser){
+        return next(
+            res.status(400).json({
+                status: 'failed',
+                message: 'The user belonging to this token no longer exists!!',
+            })
+        );
+    }
+
+    // Grant Access to the protected route
+    res.user = currentUser;
+    res.locals.user = currentUser;
+
+    next();
+
+});
+
+// Role based authentication
+exports.restrictTo = (...roles) => (req, res, next) => {
+    console.log(req.user);
+    // console.log(res.user);
+    console.log(roles)
+    if(!roles.includes(res.user.role)){
+        return next(
+            res.status(403).json({
+                status: 'failed',
+                message: `Yoy don't have permission to do this task!!!`,
+            })
+        )
+    }
+
+    return next();
+}

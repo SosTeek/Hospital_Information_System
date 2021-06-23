@@ -138,7 +138,12 @@ exports.deleteDoctor = catchAsync(async (req, res, next) => {
     if (!doc) {
       return new AppError('There is no any Doctor. with that ID!!', 404);
     }
-  
+
+    const deleteTimings = await Timing.destroy({
+      where: {
+        doctorId: id,
+      }
+    });
     res.status(404).json({
       status: 'success',
       message: 'Doctor. has been deleted successfully.',

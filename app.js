@@ -12,6 +12,9 @@ var usersRouter = require('./routes/userRoutes');
 const hospitalsRouter = require('./routes/hospitalRoutes');
 const doctorsRouter = require('./routes/doctorRoutes');
 const ambulanceRouter = require('./routes/ambulanceRoutes');
+const labRouter = require('./routes/labRoutes');
+const bloodBankRouter = require('./routes/bloodBankRoutes');
+const bloodDetailRouter = require('./routes/bloodDetailRoutes');
 
 var app = express();
 
@@ -26,5 +29,8 @@ app.use('/api/user', usersRouter);
 app.use('/api/hospital', hospitalsRouter);
 app.use('/api/doctor', doctorsRouter);
 app.use('/api/ambulance', ambulanceRouter);
+app.use('/api/lab', labRouter);
+app.use('/api/bloodbank', bloodBankRouter);
+app.use('/api/blooddetail', bloodDetailRouter);
 
 module.exports = app;

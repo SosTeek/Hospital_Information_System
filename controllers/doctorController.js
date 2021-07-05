@@ -1,6 +1,7 @@
 const catchAsync = require('express-async-handler');
 
 const AppError = require('../utils/AppError');
+const factory = require('./handlerFactory');
 
 const models = require('../models');
 const Doctor = require('../models').Doctor;
@@ -77,7 +78,8 @@ exports.findOneDoctor = catchAsync(async (req, res, next) => {
               as: 'timings',
               attributes: ['from', 'to'],
             }
-          }
+          },
+        'category',
         ]
     })
     if(!doc){
@@ -89,44 +91,45 @@ exports.findOneDoctor = catchAsync(async (req, res, next) => {
     })
 })
 
+exports.findAllDoctor = factory.getAll(Doctor);
+// exports.findAllDoctor = catchAsync(async (req, res, next) => {
+//     const doc =  await Doctor.findAll();
 
-exports.findAllDoctor = catchAsync(async (req, res, next) => {
-    const doc =  await Doctor.findAll();
+//     res.status(200).json({
+//         status: 'status',
+//         results: doc.length,
+//         data: {
+//             doc,
+//         },
+//     })
+// });
 
-    res.status(200).json({
-        status: 'status',
-        results: doc.length,
-        data: {
-            doc,
-        },
-    })
-});
-
-exports.updateDoctor = catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const doc = await Doctor.update(req.body, {
-      where: {
-        id: id,
-      },
-    });
-    if (!doc) {
-      res.status(404).json({
-        status: 'fail',
-        message: 'No Doctor. found with that id!!',
-      });
-    }
-    const updatedUser = await Doctor.findOne({
-      where: {
-        id: id,
-      },
-    });
-    res.status(200).json({
-      status: 'success',
-      data: {
-        data: updatedUser,
-      },
-    });
-  });
+exports.updateDoctor = factory.updateOne(Doctor);
+// exports.updateDoctor = catchAsync(async (req, res) => {
+//     const { id } = req.params;
+//     const doc = await Doctor.update(req.body, {
+//       where: {
+//         id: id,
+//       },
+//     });
+//     if (!doc) {
+//       res.status(404).json({
+//         status: 'fail',
+//         message: 'No Doctor. found with that id!!',
+//       });
+//     }
+//     const updatedUser = await Doctor.findOne({
+//       where: {
+//         id: id,
+//       },
+//     });
+//     res.status(200).json({
+//       status: 'success',
+//       data: {
+//         data: updatedUser,
+//       },
+//     });
+//   });
   
 exports.deleteDoctor = catchAsync(async (req, res, next) => {
     const { id } = req.params;

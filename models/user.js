@@ -21,21 +21,21 @@ module.exports = (sequelize, DataTypes) => {
     phone: {
       type: DataTypes.STRING,
       // allowNull: false,
-    //   validate: {
-    //     isValidPhoneNo: function(value) {
-    //         if (!value) return value;
+      validate: {
+        isValidPhoneNo: function(value) {
+            if (!value) return value;
 
-    //         var regexp = /^[0-9]+$/;
-    //         var values = (Array.isArray(value)) ? value : [value];
+            var regexp = /^[0-9]+$/;
+            var values = (Array.isArray(value)) ? value : [value];
 
-    //         values.forEach(function(val) {
-    //             if (!regexp.test(val)) {
-    //                 throw new Error("Number only is allowed.");
-    //             }
-    //         });
-    //         return value;
-    //     }
-    // }
+            values.forEach(function(val) {
+                if (!regexp.test(val)) {
+                    throw new Error("Number only is allowed.");
+                }
+            });
+            return value;
+        }
+    }
     },
     email: {
       type: DataTypes.STRING,
@@ -54,6 +54,13 @@ module.exports = (sequelize, DataTypes) => {
           msg: "At least 8 characters required for password"
         },
       },
+    },
+    gender: {
+      type: DataTypes.STRING,
+      enum: ['male', 'female', 'other'],
+    },
+    dateOfBirth: {
+      type: DataTypes.DATE,
     },
     role: {
       // type: DataTypes.STRING,

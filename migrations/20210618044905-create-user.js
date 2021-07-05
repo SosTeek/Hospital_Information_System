@@ -25,6 +25,13 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      gender: {
+        type: Sequelize.STRING,
+        enum: ['male', 'female', 'other'],
+      },
+      dateOfBirth: {
+        type: Sequelize.DATE,
+      },
       role: {
         type: Sequelize.STRING,
         enum: ['superAdmin', 'admin', 'user'],

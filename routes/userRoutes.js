@@ -1,5 +1,9 @@
 var express = require('express');
+// const cartRouter = require('../routes/cartRoutes');
+
 var router = express.Router();
+
+// router.use('/:userId/cart', cartRouter);
 
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');

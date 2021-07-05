@@ -4,7 +4,11 @@
     "password": "@Sosteek04",
     "database": "hospitalInformationSystem",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "dialectOptions": {
+      "useGMT": true
+    },
+    "timezone": "+5:45"
   },
   "test": {
     "username": "root",

@@ -128,19 +128,19 @@ exports.protect = catchAsync( async (req, res, next) => {
     }
 
     // Grant Access to the protected route
-    res.user = currentUser;
+    req.user = currentUser;
     res.locals.user = currentUser;
 
     next();
 
 });
 
-// Role based authentication
+// Role based authentication    
 exports.restrictTo = (...roles) => (req, res, next) => {
     console.log(req.user);
-    // console.log(res.user);
+    // console.log(req.user);
     console.log(roles)
-    if(!roles.includes(res.user.role)){
+    if(!roles.includes(req.user.role)){
         return next(
             res.status(403).json({
                 status: 'failed',
@@ -151,3 +151,10 @@ exports.restrictTo = (...roles) => (req, res, next) => {
 
     return next();
 }
+
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => res.send('Hello World!'))
+app.listen(port, () => console.log(`Example app listening on port port!`))
